@@ -1,18 +1,14 @@
-{ "$schema": "https://json.schemastore.org/web-manifest-combined.json",
-  "name": "Comboni friends",
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "name": "Comboni Freunde",
   "short_name": "COMBONI",
   "theme_color": "#c5200a",
   "background_color": "#2196f3",
-  "display":"fullscreen",
+  "display": "standalone",
   "orientation": "any",
-  "scope": "/",
-  "start_url": "/index.html",
+  "scope": "./",
+  "start_url": "./index.html",
   "icons": [
-    {
-      "src": "img/icons/app_logo_rund_x32.ico",
-      "sizes": "32x32",
-      "type": "image/ico"
-    },
     {
       "src": "img/icons/icon-72x72.png",
       "sizes": "72x72",
