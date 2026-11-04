@@ -101,7 +101,7 @@
             padding: 4px 8px;
         }
 
-        /* Tabs Navigation (Nur News) */
+        /* Tabs Navigation (Nur für News-Bereich) */
         nav.tabs {
             display: none;
             background-color: var(--primary-color);
@@ -266,7 +266,8 @@
         .thumbnail {
             width: 80px;
             height: 60px;
-            object-fit: cover;
+            object-fit: contain;
+            background-color: rgba(0,0,0,0.05);
             border-radius: 6px;
         }
 
@@ -324,18 +325,30 @@
         .popup-content {
             background: var(--surface-color);
             color: var(--text-color);
-            padding: 20px;
+            padding: 24px;
             border-radius: 12px;
-            max-width: 600px;
+            max-width: 650px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
+            line-height: 1.6;
+        }
+        .popup-content p, .popup-content div, .popup-content span {
+            margin-bottom: 14px;
         }
         .popup-header {
             display: flex;
             justify-content: space-between;
             margin-bottom: 12px;
             font-weight: bold;
+        }
+        .popup-featured-img {
+            width: 100%;
+            max-height: 250px;
+            object-fit: contain;
+            background-color: rgba(0,0,0,0.05);
+            border-radius: 8px;
+            margin-bottom: 14px;
         }
         .youtube-btn {
             background-color: #FF0000;
@@ -367,7 +380,6 @@
     <div class="menu-backdrop" id="menuBackdrop" onclick="toggleMenu()"></div>
     <div id="menu-container">
         <div class="menu-content">
-            <a href="#" onclick="toggleMenu(); openExternal('https://www.comboni.org/de/wer-sind-wir')"><i class="fa-solid fa-users"></i> wer-sind-wir</a>
             <a href="#" onclick="toggleMenu(); showDatenschutz()"><i class="fa-solid fa-shield-halved"></i> Datenschutz</a>
             <a href="#" onclick="toggleMenu(); openExternal('https://www.comboni.org/de/wer-sind-wir')"><i class="fa-solid fa-address-card"></i> Impressum</a>
             <a href="#" onclick="toggleMenu(); openExternal('https://www.facebook.com/comboni.missionare')"><i class="fa-brands fa-facebook"></i> Facebook</a>
@@ -382,49 +394,49 @@
 
     <!-- Tabs Navigation (Nur für News-Bereich) -->
     <nav class="tabs" id="mainTabs">
-        <button class="tab-btn active" onclick="switchTab('aktuell')">Aktuell</button>
-        <button class="tab-btn" onclick="switchTab('mccj')">MCCJ</button>
-        <button class="tab-btn" onclick="switchTab('geistlich')">Geistliches</button>
-        <button class="tab-btn" onclick="switchTab('weisheit')">Weisheit</button>
-        <button class="tab-btn" onclick="switchTab('epaper')">E-Paper</button>
+        <button class="tab-btn active" onclick="showNewsViewAndSwitch('aktuell')">Aktuell</button>
+        <button class="tab-btn" onclick="showNewsViewAndSwitch('mccj')">MCCJ</button>
+        <button class="tab-btn" onclick="showNewsViewAndSwitch('geistlich')">Geistliches</button>
+        <button class="tab-btn" onclick="showNewsViewAndSwitch('weisheit')">Weisheit</button>
+        <button class="tab-btn" onclick="showNewsViewAndSwitch('epaper')">E-Paper</button>
     </nav>
 
     <div class="container">
         
-        <!-- 1. TOOLS VIEW (Startseite / LogoActivity) -->
+        <!-- 1. TOOLS VIEW (Startseite) -->
         <div id="toolsView" class="view-section active">
-            <!-- Zu den Nachrichten Button -->
-            <a href="#" class="to-news-btn" onclick="showNewsViewAndSwitch('aktuell')">
-                <i class="fas fa-newspaper"></i> Zu den Nachrichten &rarr;
-            </a>
-
             <div style="text-align: center; margin-bottom: 16px;">
                 <img src="img/weltkartemccj.png" alt="Weltkarte" style="max-width: 100%; height: auto; border-radius: 8px;" onerror="this.style.display='none'">
             </div>
 
+            <!-- "Zu den Nachrichten" Button -->
+            <a href="#" class="to-news-btn" onclick="showNewsViewAndSwitch('aktuell')">
+                <i class="fas fa-newspaper"></i> Zu den Nachrichten &rarr;
+            </a>
+
             <div class="tools-grid">
                 <div class="tool-card" onclick="openExternal('https://schott.erzabtei-beuron.de/')">
-                    <img src="https://app.comboni.de/wp-content/uploads/2026/10/bible.png" alt="Schott">
+                    <img src="img/schott.png" alt="Schott" onerror="this.src='https://app.comboni.de/wp-content/uploads/2026/10/bible.png'">
                     <span>Lesungen vom Tag</span>
                 </div>
                 <div class="tool-card" onclick="openExternal('https://stundengebet.de/jetzt-beten/#gebet')">
-                    <img src="https://app.comboni.de/wp-content/uploads/2026/10/prayer.png" alt="Stundengebet">
+                    <img src="img/prayer.png" alt="Stundengebet" onerror="this.src='https://app.comboni.de/wp-content/uploads/2026/10/prayer.png'">
                     <span>Stundengebet</span>
                 </div>
                 <div class="tool-card" onclick="openKontinente()">
-                    <img id="kontinenteImg" src="https://app.comboni.de/wp-content/uploads/kontinente/kontinente_Titel.jpg" alt="Kontinente">
+                    <img id="kontinenteImg" src="img/kontinente_symb.jpg" alt="Kontinente" onerror="this.src='https://app.comboni.de/wp-content/uploads/kontinente/kontinente_Titel.jpg'">
                     <span>Kontinente ePaper</span>
                 </div>
                 <div class="tool-card" onclick="showHymnsView()">
-                    <img src="https://app.comboni.de/wp-content/uploads/2026/10/music.png" alt="Lieder">
+                    <img src="img/music.png" alt="Lieder" onerror="this.src='https://app.comboni.de/wp-content/uploads/2026/10/music.png'">
                     <span>Katholische Lieder</span>
                 </div>
                 <div class="tool-card" onclick="openExternal('https://comboni.de/online-spende')">
-                    <img src="https://app.comboni.de/wp-content/uploads/2026/10/donation.png" alt="Spende">
+                    <img src="img/spenden_siegel.png" alt="Spende" onerror="this.src='https://app.comboni.de/wp-content/uploads/2026/10/donation.png'">
                     <span>Online Spende</span>
                 </div>
                 <div class="tool-card" onclick="openExternal('https://www.netzwerkafrika.de/')">
-                    <img src="https://app.comboni.de/wp-content/uploads/2026/10/africa.png" alt="Netzwerk Afrika">
+                    <img src="img/nad_logo.png" alt="Netzwerk Afrika" onerror="this.src='https://app.comboni.de/wp-content/uploads/2026/10/africa.png'">
                     <span>Netzwerk Afrika</span>
                 </div>
             </div>
@@ -432,7 +444,7 @@
 
         <!-- 2. NEWS VIEW -->
         <div id="newsView" class="view-section">
-            <div id="aktuell" class="tab-content active">
+            <div id="aktuell" class="tab-content">
                 <div id="content-container" class="loader">Lade Nachrichten...</div>
             </div>
             <div id="mccj" class="tab-content">
@@ -470,10 +482,36 @@
             <h2>Datenschutzerklärung</h2>
             <br>
             <p><strong>1. Datenschutz auf einen Blick</strong></p>
-            <p>Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie unsere Website besuchen...</p>
+            <p><strong>Allgemeine Hinweise</strong></p>
+            <p>Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie unsere Website besuchen. Personenbezogene Daten sind alle Daten, mit denen Sie persönlich identifiziert werden können. Ausführliche Informationen zum Thema Datenschutz entnehmen Sie unserer unter diesem Text aufgeführten Datenschutzerklärung.</p>
+            <br>
+            <p><strong>Datenerfassung auf unserer Website</strong></p>
+            <p><strong>Wer ist verantwortlich für die Datenerfassung auf dieser Website?</strong></p>
+            <p>Die Datenverarbeitung auf dieser Website erfolgt durch den Websitebetreiber. Dessen Kontaktdaten können Sie dem Impressum dieser Website entnehmen.</p>
+            <br>
+            <p><strong>Wie erfassen wir Ihre Daten?</strong></p>
+            <p>Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen. Hierbei kann es sich z.B. um Daten handeln, die Sie in ein Kontaktformular eingeben.</p>
+            <p>Andere Daten werden automatisch beim Besuch der Website durch unsere IT-Systeme erfasst. Das sind vor allem technische Daten (z.B. Internetbrowser, Betriebssystem oder Uhrzeit des Seitenaufrufs). Die Erfassung dieser Daten erfolgt automatisch, sobald Sie unsere Website betreten.</p>
+            <br>
+            <p><strong>Wofür nutzen wir Ihre Daten?</strong></p>
+            <p>Ein Teil der Daten wird erhoben, um eine fehlerfreie Bereitstellung der Website zu gewährleisten. Andere Daten können zur Analyse Ihres Nutzerverhaltens verwendet werden.</p>
+            <br>
+            <p><strong>Welche Rechte haben Sie bezüglich Ihrer Daten?</strong></p>
+            <p>Sie haben jederzeit das Recht unentgeltlich Auskunft über Herkunft, Empfänger und Zweck Ihrer gespeicherten personenbezogenen Daten zu erhalten. Sie haben außerdem ein Recht, die Berichtigung, Sperrung oder Löschung dieser Daten zu verlangen. Hierzu sowie zu weiteren Fragen zum Thema Datenschutz können Sie sich jederzeit unter der im Impressum angegebenen Adresse an uns wenden. Des Weiteren steht Ihnen ein Beschwerderecht bei der zuständigen Aufsichtsbehörde zu.</p>
+            <br>
+            <h2><strong>2. Allgemeine Hinweise und Pflichtinformationen</strong></h2>
+            <p><strong>Datenschutz</strong></p>
+            <p>Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung.</p>
             <br>
             <p><strong>Hinweis zur verantwortlichen Stelle</strong></p>
-            <p>Comboni-Missionare vom Herzen Jesu, Körperschaft des öffentlichen Rechts, Deutschsprachige Provinz<br>Scharrerstraße 32, 90478 Nürnberg<br>Telefon: 0911 940577-200<br>E-Mail: nuernberg@comboni.de<br>Vertreter der Körperschaft:<br><strong>P. Roberto Turyamureeba</strong></p>
+            <p>Die verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist:</p>
+            <p>Comboni-Missionare vom Herzen Jesu, Körperschaft des öffentlichen Rechts, Deutschsprachige Provinz<br />Scharrerstraße 32<br />90478 Nürnberg<br />Telefon: 0911 940577-200<br />E-Mail: <a href="mailto:nuernberg@comboni.de">nuernberg@comboni.de</a><br />Vertreter der Körperschaft:<br /><strong>P. Roberto Turyamureeba</strong></p>
+            <br>
+            <p><strong>Widerruf Ihrer Einwilligung zur Datenverarbeitung</strong></p>
+            <p>Viele Datenverarbeitungsvorgänge sind nur mit Ihrer ausdrücklichen Einwilligung möglich. Sie können eine bereits erteilte Einwilligung jederzeit widerrufen. Dazu reicht eine formlose Mitteilung per E-Mail an uns.</p>
+            <br>
+            <p><strong>SSL- bzw. TLS-Verschlüsselung</strong></p>
+            <p>Diese Seite nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte eine SSL-bzw. TLS-Verschlüsselung.</p>
         </div>
 
     </div>
@@ -482,25 +520,6 @@
     <div class="popup" id="popup">
         <div class="popup-content" id="popup-content">
             <span class="close-button" onclick="closePopup()">&#10006; Schließen</span>
-        </div>
-    </div>
-
-    <!-- Installations-Willkommens-Popup (Beim ersten Laden) -->
-    <div class="popup" id="installWelcomePopup" style="display: none;">
-        <div class="popup-content" style="text-align: center;">
-            <h2>📱 App auf Smartphone installieren</h2>
-            <br>
-            <p style="text-align: left; line-height: 1.5; font-size: 14px;">
-                Installiere die Comboni Freunde App direkt auf deinem Startbildschirm für den besten Zugriff:
-                <br><br>
-                <b>🤖 Android (Google Chrome):</b><br>
-                Tippe oben rechts auf die drei Punkte <b>(⋮)</b> und wähle <b>"Zum Startbildschirm hinzufügen"</b> oder <b>"App installieren"</b>.
-                <br><br>
-                <b>🍏 iOS (iPhone / iPad - Safari):</b><br>
-                Tippe unten in Safari auf das Teilen-Symbol <i class="fas fa-arrow-up-from-bracket"></i> und wähle <b>"Zum Home-Bildschirm"</b>.
-            </p>
-            <br>
-            <button class="youtube-btn" style="background-color: var(--toolbar-color); margin: 0;" onclick="closeInstallWelcome()">Verstanden</button>
         </div>
     </div>
 
@@ -520,15 +539,6 @@
 
         function updateDarkModeIcon(theme) {
             document.getElementById('darkModeBtn').innerText = theme === 'dark' ? '☀️' : '🌙';
-        }
-
-        // Install Welcome Prompt beim ersten Start
-        if (!localStorage.getItem('install_popup_shown')) {
-            document.getElementById('installWelcomePopup').style.display = 'flex';
-        }
-        function closeInstallWelcome() {
-            document.getElementById('installWelcomePopup').style.display = 'none';
-            localStorage.setItem('install_popup_shown', 'true');
         }
 
         // Seitenmenü (Drawer)
@@ -554,8 +564,9 @@
         function updateHeaderHomeIcon() {
             const isToolsActive = document.getElementById('toolsView').classList.contains('active');
             const btn = document.getElementById('homeNewsToggleBtn');
-            // Zeigt Haus auf News-Seiten, Zeitung/News auf Tools-Startseite
-            btn.innerHTML = isToolsActive ? '<i class="fas fa-newspaper"></i>' : '<i class="fas fa-home"></i>';
+            if (btn) {
+                btn.innerHTML = isToolsActive ? '<i class="fas fa-newspaper"></i>' : '<i class="fas fa-home"></i>';
+            }
         }
 
         // Ansichten umschalten
@@ -564,7 +575,8 @@
             document.getElementById('toolsView').classList.add('active');
             document.getElementById('mainTabs').classList.remove('visible');
             updateHeaderHomeIcon();
-            if (document.getElementById('menu-container').classList.contains('open')) toggleMenu();
+            const menu = document.getElementById('menu-container');
+            if (menu && menu.classList.contains('open')) toggleMenu();
         }
 
         function showDatenschutz() {
@@ -598,26 +610,33 @@
 
         // News Tab Switching
         function switchTab(tabId) {
+            hideAllViews();
+            document.getElementById('newsView').classList.add('active');
+            document.getElementById('mainTabs').classList.add('visible');
+
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             
-            document.getElementById(tabId).classList.add('active');
+            const targetTab = document.getElementById(tabId);
+            if (targetTab) targetTab.classList.add('active');
             
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                if (btn.getAttribute('onclick') && btn.getAttribute('onclick'].includes(tabId)) {
+                const onclickAttr = btn.getAttribute('onclick');
+                if (onclickAttr && onclickAttr.includes(tabId)) {
                     btn.classList.add('active');
                 }
             });
 
-            if (tabId === 'aktuell' && document.getElementById('content-container').children.length === 0) {
+            // Immer frisch laden beim Klick auf einen Reiter
+            if (tabId === 'aktuell') {
                 fetchData('4');
-            } else if (tabId === 'mccj' && document.getElementById('mccjList').children.length <= 1) {
+            } else if (tabId === 'mccj') {
                 loadMccjNews();
-            } else if (tabId === 'geistlich' && document.getElementById('geistlichList').children.length <= 1) {
+            } else if (tabId === 'geistlich') {
                 fetchOtherNews('6', 'geistlichList');
-            } else if (tabId === 'weisheit' && document.getElementById('weisheitList').children.length <= 1) {
+            } else if (tabId === 'weisheit') {
                 fetchOtherNews('3', 'weisheitList');
-            } else if (tabId === 'epaper' && document.getElementById('epaperList').children.length <= 1) {
+            } else if (tabId === 'epaper') {
                 fetchOtherNews('763', 'epaperList');
             }
         }
@@ -645,24 +664,37 @@
             fetch(url, { mode: 'cors' })
                 .then(res => res.json())
                 .then(data => displayData(data, endpoint, 'content-container'))
-                .catch(err => console.error(err));
+                .catch(err => {
+                    console.error(err);
+                    document.getElementById('content-container').innerHTML = '<div class="loader">Fehler beim Laden der Nachrichten.</div>';
+                });
         }
 
         function fetchOtherNews(endpoint, elementId) {
+            const container = document.getElementById(elementId);
+            if (container) container.innerHTML = '<div class="loader">Lade Beiträge...</div>';
             const url = `https://app.comboni.de/wp-json/api/v1/posts/lan/${endpoint}`;
             fetch(url, { mode: 'cors' })
                 .then(res => res.json())
                 .then(data => displayData(data, endpoint, elementId))
-                .catch(err => console.error(err));
+                .catch(err => {
+                    console.error(err);
+                    if (container) container.innerHTML = '<div class="loader">Fehler beim Laden.</div>';
+                });
         }
 
         function loadMccjNews() {
+            const list = document.getElementById('mccjList');
+            if (list) list.innerHTML = '<div class="loader">Lade MCCJ Beiträge...</div>';
             let langId = document.getElementById('mccjLang').value;
             let url = `https://combonimission.net/appwp/wp-json/wl/v1/posts/lan/${langId}`;
             fetch(url, { mode: 'cors' })
                 .then(res => res.json())
                 .then(data => displayData(data, langId, 'mccjList'))
-                .catch(err => console.error(err));
+                .catch(err => {
+                    console.error(err);
+                    if (list) list.innerHTML = '<div class="loader">Fehler beim Laden der MCCJ Beiträge.</div>';
+                });
         }
 
         function getArticleImage(article) {
@@ -707,12 +739,15 @@
             try {
                 const res = await fetch(`${baseURL}${article.id}`);
                 const data = await res.json();
+                const imgSrc = getArticleImage(article);
                 popupContent.innerHTML = `
                     <div class="popup-header">  
                         <span>${article.publish_date || ''}</span>
                         <span style="cursor:pointer;" onclick="closePopup()">&#10006; Schließen</span>
                     </div>        
+                    <img class="popup-featured-img" src="${imgSrc}">
                     <h2>${article.title}</h2>
+                    <br>
                     <div>${data.content || ''}</div>
                 `;
                 popup.style.display = 'flex';
@@ -777,7 +812,7 @@
                 }
 
                 let lyrics = song.content || song.lyrics || song.text || '';
-                if (!lyrics.includes('<p>') && !lyrics.includes('<br>')) {
+                if (!lyrics.contains('<p>') && !lyrics.contains('<br>')) {
                     lyrics = lyrics.replace(/\n/g, '<br>');
                 }
 
@@ -800,9 +835,6 @@
         function closePopup() {
             document.getElementById('popup').style.display = 'none';
         }
-
-        // Initial Icon Setzen
-        updateHeaderHomeIcon();
     </script>
 </body>
 </html>
