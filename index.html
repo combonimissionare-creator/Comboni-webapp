@@ -447,11 +447,11 @@
 
     <!-- Tabs Navigation (Nur für News-Bereich) -->
     <nav class="tabs" id="mainTabs">
-        <button class="tab-btn active" id="tabAktuell" data-tab="aktuell">Aktuell</button>
-        <button class="tab-btn" id="tabMccj" data-tab="mccj">MCCJ</button>
-        <button class="tab-btn" id="tabGeistlich" data-tab="geistlich">Geistliches</button>
-        <button class="tab-btn" id="tabWeisheit" data-tab="weisheit">Weisheit</button>
-        <button class="tab-btn" id="tabEpaper" data-tab="epaper">E-Paper</button>
+        <button class="tab-btn active" id="tabAktuell" onclick="switchTab('aktuell', this)">Aktuell</button>
+        <button class="tab-btn" id="tabMccj" onclick="switchTab('mccj', this)">MCCJ</button>
+        <button class="tab-btn" id="tabGeistlich" onclick="switchTab('geistlich', this)">Geistliches</button>
+        <button class="tab-btn" id="tabWeisheit" onclick="switchTab('weisheit', this)">Weisheit</button>
+        <button class="tab-btn" id="tabEpaper" onclick="switchTab('epaper', this)">E-Paper</button>
     </nav>
 
     <div class="container">
@@ -485,11 +485,11 @@
                     <span>Katholische Lieder</span>
                 </div>
                 <div class="tool-card" onclick="openInAppViewer('https://comboni.de/online-spende')">
-                    <img src="https://app.comboni.de/wp-content/uploads/2026/10/donation.png" alt="Spende" onerror="this.src='https://app.comboni.de/wp-content/uploads/2026/10/donation.png'">
+                    <img src="https://raw.githubusercontent.com/combonimissionare-creator/Comboni-webapp/main/img/spenden_siegel.png" alt="Spende" onerror="this.src='https://app.comboni.de/wp-content/uploads/2026/10/donation.png'">
                     <span>Online Spende</span>
                 </div>
                 <div class="tool-card" onclick="openInAppViewer('https://www.netzwerkafrika.de/')">
-                    <img src="https://app.comboni.de/wp-content/uploads/2026/10/africa.png" alt="Netzwerk Afrika" onerror="this.src='https://app.comboni.de/wp-content/uploads/2026/10/africa.png'">
+                    <img src="https://raw.githubusercontent.com/combonimissionare-creator/Comboni-webapp/main/img/nad_logo.png" alt="Netzwerk Afrika" onerror="this.src='https://app.comboni.de/wp-content/uploads/2026/10/africa.png'">
                     <span>Netzwerk Afrika</span>
                 </div>
             </div>
@@ -563,11 +563,14 @@
             <p><strong>Widerruf Ihrer Einwilligung zur Datenverarbeitung</strong></p>
             <p>Viele Datenverarbeitungsvorgänge sind nur mit Ihrer ausdrücklichen Einwilligung möglich. Sie können eine bereits erteilte Einwilligung jederzeit widerrufen. Dazu reicht eine formlose Mitteilung per E-Mail an uns.</p>
             <br>
+            <p><strong>Beschwerderecht bei der zuständigen Aufsichtsbehörde</strong></p>
+            <p>Im Falle datenschutzrechtlicher Verstöße steht dem Betroffenen ein Beschwerderecht bei der zuständigen Aufsichtsbehörde zu.</p>
+            <br>
+            <p><strong>Recht auf Datenübertragbarkeit</strong></p>
+            <p>Sie haben das Recht, Daten, die wir auf Grundlage Ihrer Einwilligung oder in Erfüllung eines Vertrags automatisiert verarbeiten, an sich oder an einen Dritten in einem gängigen, maschinenlesbaren Format aushändigen zu lassen.</p>
+            <br>
             <p><strong>SSL- bzw. TLS-Verschlüsselung</strong></p>
             <p>Diese Seite nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte eine SSL-bzw. TLS-Verschlüsselung.</p>
-            <br>
-            <p><strong>Auskunft, Sperrung, Löschung</strong></p>
-            <p>Sie haben im Rahmen der geltenden gesetzlichen Bestimmungen jederzeit das Recht auf unentgeltliche Auskunft über Ihre gespeicherten personenbezogenen Daten, deren Herkunft und Empfänger und den Zweck der Datenverarbeitung und ggf. ein Recht auf Berichtigung, Sperrung oder Löschung dieser Daten.</p>
             <br>
             <p><strong>3. Datenschutzbeauftragter</strong></p>
             <p>Wir haben für unsere Organisation einen Datenschutzbeauftragten bestellt.<br>Joachim Laub, Böblinger Straße 10, 89522 Heidenheim<br>E-Mail: datenschutz@comboni.de</p>
@@ -585,6 +588,25 @@
     <div class="popup" id="popup">
         <div class="popup-content" id="popup-content">
             <span class="close-button" onclick="closePopup()">&#10006; Schließen</span>
+        </div>
+    </div>
+
+    <!-- Installations-Willkommens-Popup -->
+    <div class="popup" id="installWelcomePopup" style="display: none;">
+        <div class="popup-content" style="text-align: center;">
+            <h2>📱 App auf Smartphone installieren</h2>
+            <br>
+            <p style="text-align: left; line-height: 1.5; font-size: 14px;">
+                Installiere die Comboni Freunde App direkt auf deinem Startbildschirm für den besten Zugriff:
+                <br><br>
+                <b>🤖 Android (Google Chrome):</b><br>
+                Tippe oben rechts auf die drei Punkte <b>(⋮)</b> und wähle <b>"Zum Startbildschirm hinzufügen"</b> oder <b>"App installieren"</b>.
+                <br><br>
+                <b>🍏 iOS (iPhone / iPad - Safari):</b><br>
+                Tippe unten in Safari auf das Teilen-Symbol <i class="fas fa-arrow-up-from-bracket"></i> und wähle <b>"Zum Home-Bildschirm"</b>.
+            </p>
+            <br>
+            <button class="youtube-btn" style="background-color: var(--toolbar-color); margin: 0;" onclick="closeInstallWelcome()">Verstanden</button>
         </div>
     </div>
 
@@ -612,6 +634,10 @@
                 const welcomePopup = document.getElementById('installWelcomePopup');
                 if (welcomePopup) welcomePopup.style.display = 'flex';
             }, 500);
+        }
+        function closeInstallWelcome() {
+            document.getElementById('installWelcomePopup').style.display = 'none';
+            localStorage.setItem('install_popup_shown', 'true');
         }
 
         // Seitenmenü (Drawer)
@@ -705,56 +731,31 @@
             switchTab(tabId);
         }
 
-        // News Tab Switching & Event Listener Bindings
-        document.addEventListener("DOMContentLoaded", () => {
-            // Event Listener für alle Reiter (Tabs)
-            const tabsConfig = [
-                { id: 'tabAktuell', target: 'aktuell', endpoint: '4', container: 'content-container' },
-                { id: 'tabMccj', target: 'mccj', endpoint: null, action: loadMccjNews },
-                { id: 'tabGeistlich', target: 'geistlich', endpoint: '6', container: 'geistlichList' },
-                { id: 'tabWeisheit', target: 'weisheit', endpoint: '3', container: 'weisheitList' },
-                { id: 'tabEpaper', target: 'epaper', endpoint: '763', container: 'epaperList' }
-            ];
-
-            tabsConfig.forEach(tab => {
-                const btn = document.getElementById(tab.id);
-                if (btn) {
-                    btn.addEventListener('click', () => {
-                        // Aktiven Reiter stylen
-                        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                        btn.classList.add('active');
-
-                        // Tab-Inhalt umschalten
-                        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                        const targetEl = document.getElementById(tab.target);
-                        if (targetEl) targetEl.classList.add('active');
-
-                        // Daten laden
-                        if (tab.action) {
-                            tab.action();
-                        } else if (tab.endpoint && tab.container) {
-                            fetchDataWithCache(tab.endpoint, tab.container);
-                        }
-                    });
+        // News Tab Switching & Caching
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            const targetTab = document.getElementById(tabId);
+            if (targetTab) targetTab.classList.add('active');
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                const onclickAttr = btn.getAttribute('onclick');
+                if (onclickAttr && onclickAttr.includes(tabId)) {
+                    btn.classList.add('active');
                 }
             });
 
-            // Start mit Aktuell
-            fetchDataWithCache('4', 'content-container');
-        });
-
-        function switchTab(tabId) {
-            const btnMap = {
-                'aktuell': 'tabAktuell',
-                'mccj': 'tabMccj',
-                'geistlich': 'tabGeistlich',
-                'weisheit': 'tabWeisheit',
-                'epaper': 'tabEpaper'
-            };
-            const btnId = btnMap[tabId];
-            if (btnId) {
-                const btn = document.getElementById(btnId);
-                if (btn) btn.click();
+            if (tabId === 'aktuell') {
+                fetchDataWithCache('4', 'content-container');
+            } else if (tabId === 'mccj') {
+                loadMccjNews();
+            } else if (tabId === 'geistlich') {
+                fetchDataWithCache('6', 'geistlichList');
+            } else if (tabId === 'weisheit') {
+                fetchDataWithCache('3', 'weisheitList');
+            } else if (tabId === 'epaper') {
+                fetchDataWithCache('763', 'epaperList');
             }
         }
 
