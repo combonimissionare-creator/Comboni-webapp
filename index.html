@@ -145,6 +145,14 @@
             display: block;
         }
 
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         /* Seitenmenü (Drawer) */
         #menu-container {
             position: fixed;
@@ -157,12 +165,21 @@
             z-index: 1000;
             transform: translateX(-100%);
             transition: transform 0.3s ease;
-            padding-top: 60px;
+            padding-top: 20px;
             overflow-y: auto;
         }
 
         #menu-container.open {
             transform: translateX(0%);
+        }
+
+        .menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px 20px 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: bold;
         }
 
         .menu-content a {
@@ -311,6 +328,30 @@
             color: var(--text-secondary);
         }
 
+        /* Iframe Viewer für externe Seiten */
+        #iframeContainer {
+            display: none;
+            position: fixed;
+            top: 60px; left: 0; width: 100%; height: calc(100% - 60px);
+            background: #FFFFFF;
+            z-index: 1500;
+        }
+        #iframeContainer iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        #close-button {
+            display: none;
+            position: fixed;
+            top: 15px; right: 20px;
+            background: #FF0F00; color: #fff;
+            padding: 6px 14px; border-radius: 20px;
+            cursor: pointer; z-index: 1600;
+            font-weight: bold; font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
         /* Popup Modals */
         .popup {
             display: none;
@@ -361,8 +402,8 @@
             margin-bottom: 16px;
         }
     </style>
-</head>
-<body>
+    </head>
+    <body>
 
     <!-- Header -->
     <header>
@@ -376,9 +417,13 @@
         </div>
     </header>
 
-    <!-- Seitenmenü (Drawer) -->
+    <!-- Seitenmenü (Drawer) mit Schließen-Button -->
     <div class="menu-backdrop" id="menuBackdrop" onclick="toggleMenu()"></div>
     <div id="menu-container">
+        <div class="menu-header">
+            <span>Menü</span>
+            <span style="cursor:pointer;" onclick="toggleMenu()">&#10006; Schließen</span>
+        </div>
         <div class="menu-content">
             <a href="#" onclick="toggleMenu(); showDatenschutz()"><i class="fa-solid fa-shield-halved"></i> Datenschutz</a>
             <a href="#" onclick="toggleMenu(); openExternal('https://www.comboni.org/de/wer-sind-wir')"><i class="fa-solid fa-address-card"></i> Impressum</a>
@@ -392,13 +437,21 @@
         </div>
     </div>
 
+    <!-- Schließen-Button für externe Iframe-Seiten -->
+    <div id="close-button" onclick="resetIframe(); hideIframe();">× Schließen</div>
+
+    <!-- Iframe Container für externe Webseiten -->
+    <div id="iframeContainer">
+        <iframe id="mainIframe" src="about:blank"></iframe>
+    </div>
+
     <!-- Tabs Navigation (Nur für News-Bereich) -->
     <nav class="tabs" id="mainTabs">
-        <button class="tab-btn active" onclick="showNewsViewAndSwitch('aktuell')">Aktuell</button>
-        <button class="tab-btn" onclick="showNewsViewAndSwitch('mccj')">MCCJ</button>
-        <button class="tab-btn" onclick="showNewsViewAndSwitch('geistlich')">Geistliches</button>
-        <button class="tab-btn" onclick="showNewsViewAndSwitch('weisheit')">Weisheit</button>
-        <button class="tab-btn" onclick="showNewsViewAndSwitch('epaper')">E-Paper</button>
+        <button class="tab-btn active" id="tabAktuell" onclick="switchTab('aktuell', this)">Aktuell</button>
+        <button class="tab-btn" id="tabMccj" onclick="switchTab('mccj', this)">MCCJ</button>
+        <button class="tab-btn" id="tabGeistlich" onclick="switchTab('geistlich', this)">Geistliches</button>
+        <button class="tab-btn" id="tabWeisheit" onclick="switchTab('weisheit', this)">Weisheit</button>
+        <button class="tab-btn" id="tabEpaper" onclick="switchTab('epaper', this)">E-Paper</button>
     </nav>
 
     <div class="container">
@@ -415,28 +468,28 @@
             </a>
 
             <div class="tools-grid">
-                <div class="tool-card" onclick="openExternal('https://schott.erzabtei-beuron.de/')">
-                    <img src="img/schott.png" alt="Schott" onerror="this.src='https://app.comboni.de/wp-content/uploads/2026/10/bible.png'">
+                <div class="tool-card" onclick="openInAppViewer('https://schott.erzabtei-beuron.de/')">
+                    <img src="https://raw.githubusercontent.com/combonimissionare-creator/Comboni-webapp/main/img/schott.png" alt="Schott" onerror="this.src='https://app.comboni.de/wp-content/uploads/2026/10/bible.png'">
                     <span>Lesungen vom Tag</span>
                 </div>
-                <div class="tool-card" onclick="openExternal('https://stundengebet.de/jetzt-beten/#gebet')">
-                    <img src="img/prayer.png" alt="Stundengebet" onerror="this.src='https://app.comboni.de/wp-content/uploads/2026/10/prayer.png'">
+                <div class="tool-card" onclick="openInAppViewer('https://stundengebet.de/jetzt-beten/#gebet')">
+                    <img src="https://raw.githubusercontent.com/combonimissionare-creator/Comboni-webapp/main/img/beten_mit_buch.png" alt="Stundengebet" onerror="this.src='https://app.comboni.de/wp-content/uploads/2026/10/prayer.png'">
                     <span>Stundengebet</span>
                 </div>
                 <div class="tool-card" onclick="openKontinente()">
-                    <img id="kontinenteImg" src="img/kontinente_symb.jpg" alt="Kontinente" onerror="this.src='https://app.comboni.de/wp-content/uploads/kontinente/kontinente_Titel.jpg'">
+                    <img id="kontinenteImg" src="https://app.comboni.de/wp-content/uploads/kontinente/kontinente_Titel.jpg" alt="Kontinente">
                     <span>Kontinente ePaper</span>
                 </div>
                 <div class="tool-card" onclick="showHymnsView()">
-                    <img src="img/music.png" alt="Lieder" onerror="this.src='https://app.comboni.de/wp-content/uploads/2026/10/music.png'">
+                    <img src="https://raw.githubusercontent.com/combonimissionare-creator/Comboni-webapp/main/img/music.png" alt="Lieder" onerror="this.src='https://app.comboni.de/wp-content/uploads/2026/10/music.png'">
                     <span>Katholische Lieder</span>
                 </div>
-                <div class="tool-card" onclick="openExternal('https://comboni.de/online-spende')">
-                    <img src="img/spenden_siegel.png" alt="Spende" onerror="this.src='https://app.comboni.de/wp-content/uploads/2026/10/donation.png'">
+                <div class="tool-card" onclick="openInAppViewer('https://comboni.de/online-spende')">
+                    <img src="https://raw.githubusercontent.com/combonimissionare-creator/Comboni-webapp/main/img/spenden_siegel.png" alt="Spende" onerror="this.src='https://app.comboni.de/wp-content/uploads/2026/10/donation.png'">
                     <span>Online Spende</span>
                 </div>
-                <div class="tool-card" onclick="openExternal('https://www.netzwerkafrika.de/')">
-                    <img src="img/nad_logo.png" alt="Netzwerk Afrika" onerror="this.src='https://app.comboni.de/wp-content/uploads/2026/10/africa.png'">
+                <div class="tool-card" onclick="openInAppViewer('https://www.netzwerkafrika.de/')">
+                    <img src="https://raw.githubusercontent.com/combonimissionare-creator/Comboni-webapp/main/img/nad_logo.png" alt="Netzwerk Afrika" onerror="this.src='https://app.comboni.de/wp-content/uploads/2026/10/africa.png'">
                     <span>Netzwerk Afrika</span>
                 </div>
             </div>
@@ -477,7 +530,7 @@
             <div id="hymnList" class="loader">Lade Lieder...</div>
         </div>
 
-        <!-- 4. DATENSCHUTZ VIEW -->
+        <!-- 4. DATENSCHUTZ VIEW (Vollständig) -->
         <div id="datenschutzView" class="view-section" style="line-height: 1.6; font-size: 14px;">
             <h2>Datenschutzerklärung</h2>
             <br>
@@ -510,8 +563,23 @@
             <p><strong>Widerruf Ihrer Einwilligung zur Datenverarbeitung</strong></p>
             <p>Viele Datenverarbeitungsvorgänge sind nur mit Ihrer ausdrücklichen Einwilligung möglich. Sie können eine bereits erteilte Einwilligung jederzeit widerrufen. Dazu reicht eine formlose Mitteilung per E-Mail an uns.</p>
             <br>
+            <p><strong>Beschwerderecht bei der zuständigen Aufsichtsbehörde</strong></p>
+            <p>Im Falle datenschutzrechtlicher Verstöße steht dem Betroffenen ein Beschwerderecht bei der zuständigen Aufsichtsbehörde zu.</p>
+            <br>
+            <p><strong>Recht auf Datenübertragbarkeit</strong></p>
+            <p>Sie haben das Recht, Daten, die wir auf Grundlage Ihrer Einwilligung oder in Erfüllung eines Vertrags automatisiert verarbeiten, an sich oder an einen Dritten in einem gängigen, maschinenlesbaren Format aushändigen zu lassen.</p>
+            <br>
             <p><strong>SSL- bzw. TLS-Verschlüsselung</strong></p>
             <p>Diese Seite nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte eine SSL-bzw. TLS-Verschlüsselung.</p>
+            <br>
+            <p><strong>3. Datenschutzbeauftragter</strong></p>
+            <p>Wir haben für unsere Organisation einen Datenschutzbeauftragten bestellt.<br>Joachim Laub, Böblinger Straße 10, 89522 Heidenheim<br>E-Mail: datenschutz@comboni.de</p>
+            <br>
+            <p><strong>4. Analysetools und Werbung (Matomo)</strong></p>
+            <p>Diese Website benutzt den Open Source Webanalysedienst Matomo zur anonymisierten Analyse des Nutzerverhaltens.</p>
+            <br>
+            <p><strong>5. Zahlungsanbieter (Fundraisingbox, PayPal, Sofortüberweisung)</strong></p>
+            <p>Wenn Sie online spenden möchten, werden Zahlungsdaten über unsere Partner (Fundraisingbox, PayPal, Sofort) verschlüsselt und SSL-gesichert abgewickelt.</p>
         </div>
 
     </div>
@@ -520,6 +588,25 @@
     <div class="popup" id="popup">
         <div class="popup-content" id="popup-content">
             <span class="close-button" onclick="closePopup()">&#10006; Schließen</span>
+        </div>
+    </div>
+
+    <!-- Installations-Willkommens-Popup -->
+    <div class="popup" id="installWelcomePopup" style="display: none;">
+        <div class="popup-content" style="text-align: center;">
+            <h2>📱 App auf Smartphone installieren</h2>
+            <br>
+            <p style="text-align: left; line-height: 1.5; font-size: 14px;">
+                Installiere die Comboni Freunde App direkt auf deinem Startbildschirm für den besten Zugriff:
+                <br><br>
+                <b>🤖 Android (Google Chrome):</b><br>
+                Tippe oben rechts auf die drei Punkte <b>(⋮)</b> und wähle <b>"Zum Startbildschirm hinzufügen"</b> oder <b>"App installieren"</b>.
+                <br><br>
+                <b>🍏 iOS (iPhone / iPad - Safari):</b><br>
+                Tippe unten in Safari auf das Teilen-Symbol <i class="fas fa-arrow-up-from-bracket"></i> und wähle <b>"Zum Home-Bildschirm"</b>.
+            </p>
+            <br>
+            <button class="youtube-btn" style="background-color: var(--toolbar-color); margin: 0;" onclick="closeInstallWelcome()">Verstanden</button>
         </div>
     </div>
 
@@ -541,6 +628,18 @@
             document.getElementById('darkModeBtn').innerText = theme === 'dark' ? '☀️' : '🌙';
         }
 
+        // Install Welcome Prompt
+        if (!localStorage.getItem('install_popup_shown')) {
+            setTimeout(() => {
+                const welcomePopup = document.getElementById('installWelcomePopup');
+                if (welcomePopup) welcomePopup.style.display = 'flex';
+            }, 500);
+        }
+        function closeInstallWelcome() {
+            document.getElementById('installWelcomePopup').style.display = 'none';
+            localStorage.setItem('install_popup_shown', 'true');
+        }
+
         // Seitenmenü (Drawer)
         function toggleMenu() {
             document.getElementById('menu-container').classList.toggle('open');
@@ -549,6 +648,30 @@
 
         function openExternal(url) {
             window.open(url, '_blank');
+        }
+
+        // In-App Iframe Viewer für externe Seiten mit Schließen-Button
+        function openInAppViewer(url) {
+            const iframe = document.getElementById('mainIframe');
+            const container = document.getElementById('iframeContainer');
+            const closeBtn = document.getElementById('close-button');
+            if (iframe && container && closeBtn) {
+                iframe.src = url;
+                container.style.display = 'block';
+                closeBtn.style.display = 'block';
+            }
+        }
+
+        function resetIframe() {
+            const iframe = document.getElementById('mainIframe');
+            if (iframe) iframe.src = "about:blank";
+        }
+
+        function hideIframe() {
+            const container = document.getElementById('iframeContainer');
+            const closeBtn = document.getElementById('close-button');
+            if (container) container.style.display = 'none';
+            if (closeBtn) closeBtn.style.display = 'none';
         }
 
         // Intelligenter Home/News Toggle Button im Header
@@ -608,12 +731,8 @@
             switchTab(tabId);
         }
 
-        // News Tab Switching
+        // News Tab Switching & Caching
         function switchTab(tabId) {
-            hideAllViews();
-            document.getElementById('newsView').classList.add('active');
-            document.getElementById('mainTabs').classList.add('visible');
-
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             
@@ -627,17 +746,16 @@
                 }
             });
 
-            // Immer frisch laden beim Klick auf einen Reiter
             if (tabId === 'aktuell') {
-                fetchData('4');
+                fetchDataWithCache('4', 'content-container');
             } else if (tabId === 'mccj') {
                 loadMccjNews();
             } else if (tabId === 'geistlich') {
-                fetchOtherNews('6', 'geistlichList');
+                fetchDataWithCache('6', 'geistlichList');
             } else if (tabId === 'weisheit') {
-                fetchOtherNews('3', 'weisheitList');
+                fetchDataWithCache('3', 'weisheitList');
             } else if (tabId === 'epaper') {
-                fetchOtherNews('763', 'epaperList');
+                fetchDataWithCache('763', 'epaperList');
             }
         }
 
@@ -658,43 +776,47 @@
         }
         fetchKontinente();
 
-        // API Fetching
-        function fetchData(endpoint = '4') {
-            const url = `https://app.comboni.de/wp-json/api/v1/posts/lan/${endpoint}`;
-            fetch(url, { mode: 'cors' })
-                .then(res => res.json())
-                .then(data => displayData(data, endpoint, 'content-container'))
-                .catch(err => {
-                    console.error(err);
-                    document.getElementById('content-container').innerHTML = '<div class="loader">Fehler beim Laden der Nachrichten.</div>';
-                });
-        }
+        // API Fetching mit lokalem Caching & CORS Fallback
+        async function fetchDataWithCache(endpoint, containerId) {
+            const container = document.getElementById(containerId);
+            const cacheKey = 'comboni_cache_' + endpoint;
+            
+            const cached = localStorage.getItem(cacheKey);
+            if (cached) {
+                try {
+                    displayData(JSON.parse(cached), endpoint, containerId);
+                } catch(e) {}
+            } else if (container) {
+                container.innerHTML = '<div class="loader">Lade Beiträge...</div>';
+            }
 
-        function fetchOtherNews(endpoint, elementId) {
-            const container = document.getElementById(elementId);
-            if (container) container.innerHTML = '<div class="loader">Lade Beiträge...</div>';
-            const url = `https://app.comboni.de/wp-json/api/v1/posts/lan/${endpoint}`;
-            fetch(url, { mode: 'cors' })
-                .then(res => res.json())
-                .then(data => displayData(data, endpoint, elementId))
-                .catch(err => {
-                    console.error(err);
-                    if (container) container.innerHTML = '<div class="loader">Fehler beim Laden.</div>';
-                });
+            let url = endpoint.startsWith('http') ? endpoint : `https://app.comboni.de/wp-json/api/v1/posts/lan/${endpoint}`;
+            if (['8', '9', '10'].includes(endpoint)) {
+                url = `https://combonimission.net/appwp/wp-json/wl/v1/posts/lan/${endpoint}`;
+            }
+
+            try {
+                let res = await fetch(url, { mode: 'cors' });
+                let data = await res.json();
+                localStorage.setItem(cacheKey, JSON.stringify(data));
+                displayData(data, endpoint, containerId);
+            } catch (err) {
+                try {
+                    let proxyRes = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
+                    let data = await proxyRes.json();
+                    localStorage.setItem(cacheKey, JSON.stringify(data));
+                    displayData(data, endpoint, containerId);
+                } catch (e) {
+                    if (!cached && container) {
+                        container.innerHTML = '<div class="loader">Fehler beim Laden der Beiträge. Keine Internetverbindung.</div>';
+                    }
+                }
+            }
         }
 
         function loadMccjNews() {
-            const list = document.getElementById('mccjList');
-            if (list) list.innerHTML = '<div class="loader">Lade MCCJ Beiträge...</div>';
             let langId = document.getElementById('mccjLang').value;
-            let url = `https://combonimission.net/appwp/wp-json/wl/v1/posts/lan/${langId}`;
-            fetch(url, { mode: 'cors' })
-                .then(res => res.json())
-                .then(data => displayData(data, langId, 'mccjList'))
-                .catch(err => {
-                    console.error(err);
-                    if (list) list.innerHTML = '<div class="loader">Fehler beim Laden der MCCJ Beiträge.</div>';
-                });
+            fetchDataWithCache(langId, 'mccjList');
         }
 
         function getArticleImage(article) {
@@ -760,12 +882,25 @@
         let allHymns = [];
         async function loadHymns() {
             const container = document.getElementById('hymnList');
+            const cacheKey = 'comboni_cache_hymns';
+            const cached = localStorage.getItem(cacheKey);
+            
+            if (cached) {
+                try {
+                    allHymns = JSON.parse(cached);
+                    renderHymns(allHymns);
+                } catch(e) {}
+            }
+
             try {
                 let res = await fetch('https://combonimissionare-creator.github.io/Lieder-app/index.json?t=' + Date.now());
                 allHymns = await res.json();
+                localStorage.setItem(cacheKey, JSON.stringify(allHymns));
                 renderHymns(allHymns);
             } catch (e) {
-                container.innerHTML = '<div class="loader">Fehler beim Laden der Lieder.</div>';
+                if (!cached && container) {
+                    container.innerHTML = '<div class="loader">Fehler beim Laden der Lieder.</div>';
+                }
             }
         }
 
@@ -812,7 +947,7 @@
                 }
 
                 let lyrics = song.content || song.lyrics || song.text || '';
-                if (!lyrics.contains('<p>') && !lyrics.contains('<br>')) {
+                if (!lyrics.includes('<p>') && !lyrics.includes('<br>')) {
                     lyrics = lyrics.replace(/\n/g, '<br>');
                 }
 
@@ -835,6 +970,15 @@
         function closePopup() {
             document.getElementById('popup').style.display = 'none';
         }
+
+     // Service Worker für PWA-Installation registrieren
+        if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('serviceWorker.js')
+                .then(reg => console.log('Service Worker erfolgreich registriert:', reg.scope))
+                .catch(err => console.log('Service Worker Registrierung fehlgeschlagen:', err));
+        });
+     }
     </script>
 </body>
 </html>
