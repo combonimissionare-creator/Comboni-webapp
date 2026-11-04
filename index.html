@@ -970,9 +970,7 @@
         function closePopup() {
             document.getElementById('popup').style.display = 'none';
         }
-    </script>
-    <script>
-    // Service Worker für PWA-Installation registrieren
+       // Service Worker für PWA-Installation registrieren
     if ('serviceWorker' in navigator) {
         window.load = window.addEventListener('load', () => {
             navigator.serviceWorker.register('serviceWorker.js')
