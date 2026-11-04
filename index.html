@@ -145,6 +145,14 @@
             display: block;
         }
 
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         /* Seitenmenü (Drawer) */
         #menu-container {
             position: fixed;
@@ -444,7 +452,7 @@
 
         <!-- 2. NEWS VIEW -->
         <div id="newsView" class="view-section">
-            <div id="aktuell" class="tab-content">
+            <div id="aktuell" class="tab-content active">
                 <div id="content-container" class="loader">Lade Nachrichten...</div>
             </div>
             <div id="mccj" class="tab-content">
@@ -485,33 +493,8 @@
             <p><strong>Allgemeine Hinweise</strong></p>
             <p>Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie unsere Website besuchen. Personenbezogene Daten sind alle Daten, mit denen Sie persönlich identifiziert werden können. Ausführliche Informationen zum Thema Datenschutz entnehmen Sie unserer unter diesem Text aufgeführten Datenschutzerklärung.</p>
             <br>
-            <p><strong>Datenerfassung auf unserer Website</strong></p>
-            <p><strong>Wer ist verantwortlich für die Datenerfassung auf dieser Website?</strong></p>
-            <p>Die Datenverarbeitung auf dieser Website erfolgt durch den Websitebetreiber. Dessen Kontaktdaten können Sie dem Impressum dieser Website entnehmen.</p>
-            <br>
-            <p><strong>Wie erfassen wir Ihre Daten?</strong></p>
-            <p>Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen. Hierbei kann es sich z.B. um Daten handeln, die Sie in ein Kontaktformular eingeben.</p>
-            <p>Andere Daten werden automatisch beim Besuch der Website durch unsere IT-Systeme erfasst. Das sind vor allem technische Daten (z.B. Internetbrowser, Betriebssystem oder Uhrzeit des Seitenaufrufs). Die Erfassung dieser Daten erfolgt automatisch, sobald Sie unsere Website betreten.</p>
-            <br>
-            <p><strong>Wofür nutzen wir Ihre Daten?</strong></p>
-            <p>Ein Teil der Daten wird erhoben, um eine fehlerfreie Bereitstellung der Website zu gewährleisten. Andere Daten können zur Analyse Ihres Nutzerverhaltens verwendet werden.</p>
-            <br>
-            <p><strong>Welche Rechte haben Sie bezüglich Ihrer Daten?</strong></p>
-            <p>Sie haben jederzeit das Recht unentgeltlich Auskunft über Herkunft, Empfänger und Zweck Ihrer gespeicherten personenbezogenen Daten zu erhalten. Sie haben außerdem ein Recht, die Berichtigung, Sperrung oder Löschung dieser Daten zu verlangen. Hierzu sowie zu weiteren Fragen zum Thema Datenschutz können Sie sich jederzeit unter der im Impressum angegebenen Adresse an uns wenden. Des Weiteren steht Ihnen ein Beschwerderecht bei der zuständigen Aufsichtsbehörde zu.</p>
-            <br>
-            <h2><strong>2. Allgemeine Hinweise und Pflichtinformationen</strong></h2>
-            <p><strong>Datenschutz</strong></p>
-            <p>Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung.</p>
-            <br>
             <p><strong>Hinweis zur verantwortlichen Stelle</strong></p>
-            <p>Die verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist:</p>
             <p>Comboni-Missionare vom Herzen Jesu, Körperschaft des öffentlichen Rechts, Deutschsprachige Provinz<br />Scharrerstraße 32<br />90478 Nürnberg<br />Telefon: 0911 940577-200<br />E-Mail: <a href="mailto:nuernberg@comboni.de">nuernberg@comboni.de</a><br />Vertreter der Körperschaft:<br /><strong>P. Roberto Turyamureeba</strong></p>
-            <br>
-            <p><strong>Widerruf Ihrer Einwilligung zur Datenverarbeitung</strong></p>
-            <p>Viele Datenverarbeitungsvorgänge sind nur mit Ihrer ausdrücklichen Einwilligung möglich. Sie können eine bereits erteilte Einwilligung jederzeit widerrufen. Dazu reicht eine formlose Mitteilung per E-Mail an uns.</p>
-            <br>
-            <p><strong>SSL- bzw. TLS-Verschlüsselung</strong></p>
-            <p>Diese Seite nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte eine SSL-bzw. TLS-Verschlüsselung.</p>
         </div>
 
     </div>
@@ -610,10 +593,6 @@
 
         // News Tab Switching
         function switchTab(tabId) {
-            hideAllViews();
-            document.getElementById('newsView').classList.add('active');
-            document.getElementById('mainTabs').classList.add('visible');
-
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             
@@ -627,7 +606,6 @@
                 }
             });
 
-            // Immer frisch laden beim Klick auf einen Reiter
             if (tabId === 'aktuell') {
                 fetchData('4');
             } else if (tabId === 'mccj') {
@@ -666,7 +644,7 @@
                 .then(data => displayData(data, endpoint, 'content-container'))
                 .catch(err => {
                     console.error(err);
-                    document.getElementById('content-container').innerHTML = '<div class="loader">Fehler beim Laden der Nachrichten.</div>';
+                    document.getElementById('content-container').innerHTML = '<div class="loader">Fehler beim Laden.</div>';
                 });
         }
 
@@ -693,7 +671,7 @@
                 .then(data => displayData(data, langId, 'mccjList'))
                 .catch(err => {
                     console.error(err);
-                    if (list) list.innerHTML = '<div class="loader">Fehler beim Laden der MCCJ Beiträge.</div>';
+                    if (list) list.innerHTML = '<div class="loader">Fehler beim Laden.</div>';
                 });
         }
 
@@ -812,7 +790,7 @@
                 }
 
                 let lyrics = song.content || song.lyrics || song.text || '';
-                if (!lyrics.contains('<p>') && !lyrics.contains('<br>')) {
+                if (!lyrics.includes('<p>') && !lyrics.includes('<br>')) {
                     lyrics = lyrics.replace(/\n/g, '<br>');
                 }
 
@@ -835,6 +813,11 @@
         function closePopup() {
             document.getElementById('popup').style.display = 'none';
         }
+
+        // Automatischer Start beim Laden (lädt Aktuell / lan/4)
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchData('4');
+        });
     </script>
 </body>
 </html>
