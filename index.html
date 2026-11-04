@@ -971,5 +971,15 @@
             document.getElementById('popup').style.display = 'none';
         }
     </script>
+    <script>
+    // Service Worker für PWA-Installation registrieren
+    if ('serviceWorker' in navigator) {
+        window.load = window.addEventListener('load', () => {
+            navigator.serviceWorker.register('serviceWorker.js')
+                .then(reg => console.log('Service Worker registriert:', reg.scope))
+                .catch(err => console.log('Service Worker Fehler:', err));
+        });
+    }
+</script>
 </body>
 </html>
